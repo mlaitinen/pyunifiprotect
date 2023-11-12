@@ -33,18 +33,23 @@ MODEL_TO_CLASS: Dict[str, Type[ProtectModel]] = {
 
 def get_klass_from_dict(data: Dict[str, Any]) -> Type[ProtectModel]:
     """
-    Helper method to read the `modelKey` from a UFP JSON dict and get the correct Python class for conversion.
-    Will raise `DataDecodeError` if the `modelKey` is for an unknown object.
+    Helper method to read the model key from a UFP JSON dict and get the correct Python class for conversion.
+    Will raise `DataDecodeError` if the model key is for an unknown object.
     """
-    if "modelKey" not in data:
-        raise DataDecodeError("No modelKey")
 
-    model = ModelType(data["modelKey"])
+    if "modelkey" in data:
+        modelkey = data["modelkey"]
+    elif "modelKey" in data:
+        modelkey = data["modelKey"]
+    else:
+        raise DataDecodeError("No model key")
+
+    model = ModelType(modelkey)
 
     klass = MODEL_TO_CLASS.get(model)
 
     if klass is None:
-        raise DataDecodeError("Unknown modelKey")
+        raise DataDecodeError("Unknown model key")
 
     return klass
 
@@ -53,12 +58,12 @@ def create_from_unifi_dict(
     data: Dict[str, Any], api: Optional[ProtectApiClient] = None, klass: Optional[Type[ProtectModel]] = None
 ) -> ProtectModel:
     """
-    Helper method to read the `modelKey` from a UFP JSON dict and convert to currect Python class.
-    Will raise `DataDecodeError` if the `modelKey` is for an unknown object.
+    Helper method to read the model key from a UFP JSON dict and convert to currect Python class.
+    Will raise `DataDecodeError` if the model key is for an unknown object.
     """
 
-    if "modelKey" not in data:
-        raise DataDecodeError("No modelKey")
+    if "modelkey" not in data and "modelKey" not in data:
+        raise DataDecodeError("No model key")
 
     if klass is None:
         klass = get_klass_from_dict(data)

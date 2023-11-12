@@ -537,7 +537,7 @@ class ProtectModel(ProtectBaseObject):
     @classmethod
     @cache
     def _get_unifi_remaps(cls) -> Dict[str, str]:
-        return {**super()._get_unifi_remaps(), "modelKey": "model"}
+        return {**super()._get_unifi_remaps(), "modelKey": "model", "modelkey": "model"}
 
     def unifi_dict(self, data: Optional[Dict[str, Any]] = None, exclude: Optional[Set[str]] = None) -> Dict[str, Any]:
         data = super().unifi_dict(data=data, exclude=exclude)
